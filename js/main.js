@@ -13,6 +13,7 @@ const inputName = document.querySelector('.js-input-name');
 const linkNewFormElememt = document.querySelector('.js-button-new-form');
 const labelMesageError = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
+const inputRace = document.querySelector('.js-input-race');
 
 
 //Objetos con cada gatito
@@ -36,6 +37,7 @@ const kittenData_3 = {
 };
 
 const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];
+
 
 //Funciones
 function renderKitten(kittenData) {
@@ -79,12 +81,20 @@ function handleClickNewCatForm(event) {
         hideNewCatForm();
     }
 }
+function resetNewKitten() {
+    inputDesc.value = "";
+    inputPhoto.value = "";
+    inputName.value = "";
+    inputRace.value = "";
+}
+
 //Adicionar nuevo gatito
 function addNewKitten(event) {
     event.preventDefault();
     const valueDesc = inputDesc.value;
     const valuePhoto = inputPhoto.value;
     const valueName = inputName.value;
+    const valueRace = inputRace.value;
     if (valueDesc === "" && valuePhoto === "" && valueName === "") {
         labelMesageError.innerHTML = "Debe rellenar todos los valores";
     } else {
@@ -92,7 +102,22 @@ function addNewKitten(event) {
             labelMesageError.innerHTML = "";
         }
     }
+//2.11 Agregar un nuevo gatito al listado
+    const newKittenDataObject = {
+        image: valuePhoto,
+        name: valueName,
+        desc: valueDesc,
+        race: valueRace,
+      };
+      kittenDataList.push(newKittenDataObject);
+      console.dir(kittenDataList);
+      renderKittenList(kittenDataList);
+      resetNewKitten();
+      labelMesageError.innerHTML = 'Mola! Un nuevo gatito en Adalab!';
 }
+
+
+
 //Cancelar la búsqueda de un gatito
 function cancelNewKitten(event) {
     event.preventDefault();
@@ -100,6 +125,7 @@ function cancelNewKitten(event) {
     inputDesc.value = "";
     inputPhoto.value = "";
     inputName.value = "";
+    inputRace.value = "";
 }
 
 //Filtrar por descripción
