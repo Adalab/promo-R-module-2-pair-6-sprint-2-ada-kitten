@@ -79,20 +79,21 @@ searchButton.addEventListener('click', filterKitten);
 const input_search_desc = document.querySelector('.js_in_search_desc');
 const descrSearchText = input_search_desc.value;
 
-function filterKitten(event) {
-  event.preventDefault();
-  console.log('hola');
-  listElement.innerHTML = '';
-  if (kittenDesc1.includes(descrSearchText)) {
-    listElement.innerHTML += kittenOne;
-  }
-  if (kittenDesc2.includes(descrSearchText)) {
-    listElement.innerHTML += kittenTwo;
-  }
-  if (kittenDesc3.includes(descrSearchText)) {
-    listElement.innerHTML += kittenThree;
-  }
-}
+// function filterKitten(event) {
+//   event.preventDefault();
+//   console.log('hola');
+//   listElement.innerHTML = '';
+
+//   if (kittenDesc1.includes(descrSearchText)) {
+//     listElement.innerHTML += kittenOne;
+//   }
+//   if (kittenDesc2.includes(descrSearchText)) {
+//     listElement.innerHTML += kittenTwo;
+//   }
+//   if (kittenDesc3.includes(descrSearchText)) {
+//     listElement.innerHTML += kittenThree;
+//   }
+// }
 
 //6. BONUS Mostrar la raza o no
 function renderRace(race) {
