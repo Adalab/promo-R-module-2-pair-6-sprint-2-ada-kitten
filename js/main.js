@@ -15,6 +15,7 @@ const input_search_desc = document.querySelector('.js_in_search_desc');
 const input_search_race = document.querySelector('.js_in_search_race');
 const inputRace = document.querySelector('.js-input-race');
 
+
 //Objetos con cada gatito
 const kittenData_1 = {
   image: 'https://ychef.files.bbci.co.uk/976x549/p07ryyyj.jpg',
@@ -37,7 +38,7 @@ const kittenData_3 = {
   race: 'Europeo común',
 };
 
-const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];
+/* let kittenDataList = [kittenData_1, kittenData_2, kittenData_3]; */
 
 //Funciones
 function renderKitten(kittenData) {
@@ -59,6 +60,7 @@ function renderKitten(kittenData) {
 }
 
 function renderKittenList(kittenDataList) {
+    console.log(kittenDataList);
   listElement.innerHTML = '';
   for (const kittenItem of kittenDataList) {
     listElement.innerHTML += renderKitten(kittenItem);
@@ -148,8 +150,23 @@ function filterKitten(event) {
   }
 }
 
-//Mostrar el litado de gatitos en ell HTML
-renderKittenList(kittenDataList);
+//Mostrar el listado de gatitos en ell HTML
+/* renderKittenList(kittenDataList); */
+
+
+const GITHUB_USER = 'CeciPeriquet';
+const SERVER_URL = `https://dev.adalab.es/api/kittens/${GITHUB_USER}`;
+
+let kittenDataList = [];
+
+fetch(SERVER_URL, {
+    method: 'GET',
+    headers: {'Content-Type': 'application/json'},
+  }).then((response) => response.json())
+    .then ((data) => {
+    kittenDataList = data.results;
+    renderKittenList(kittenDataList);
+  } );
 
 //Eventos
 linkNewFormElememt.addEventListener('click', handleClickNewCatForm);
