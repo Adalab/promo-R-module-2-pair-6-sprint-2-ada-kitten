@@ -15,7 +15,6 @@ const input_search_desc = document.querySelector('.js_in_search_desc');
 const input_search_race = document.querySelector('.js_in_search_race');
 const inputRace = document.querySelector('.js-input-race');
 
-
 //Objetos con cada gatito
 const kittenData_1 = {
   image: 'https://ychef.files.bbci.co.uk/976x549/p07ryyyj.jpg',
@@ -60,7 +59,6 @@ function renderKitten(kittenData) {
 }
 
 function renderKittenList(kittenDataList) {
-    console.log(kittenDataList);
   listElement.innerHTML = '';
   for (const kittenItem of kittenDataList) {
     listElement.innerHTML += renderKitten(kittenItem);
@@ -91,12 +89,14 @@ function resetNewKitten() {
 }
 
 //Adicionar nuevo gatito
+/*
 function addNewKitten(event) {
   event.preventDefault();
   const valueDesc = inputDesc.value;
   const valuePhoto = inputPhoto.value;
   const valueName = inputName.value;
   const valueRace = inputRace.value;
+  
   if (valueDesc === '' && valuePhoto === '' && valueName === '') {
     labelMesageError.innerHTML = 'Debe rellenar todos los valores';
   } else {
@@ -117,6 +117,52 @@ function addNewKitten(event) {
   resetNewKitten();
   labelMesageError.innerHTML = 'Mola! Un nuevo gatito en Adalab!';
 }
+*/
+
+function addNewKitten(event) {
+  event.preventDefault();
+  const newDesc = inputDesc.value;
+  const newPhoto = inputPhoto.value;
+  const newName = inputName.value;
+  const newRace = inputRace.value;
+
+  if (newDesc === '' && newPhoto === '' && newName === '') {
+    labelMesageError.innerHTML = 'Debe rellenar todos los valores';
+  } else {
+    const newKittenDataObject = {
+      image: newPhoto,
+      name: newName,
+      desc: newDesc,
+      race: newRace,
+    };
+
+    fetch(`https://dev.adalab.es/api/kittens/${GITHUB_USER}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newKittenDataObject),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          //Completa y/o modifica el código:
+          //Agrega el nuevo gatito al listado
+          kittenDataList.push(newKittenDataObject);
+          //Guarda el listado actualizado en el local stoarge
+          localStorage.setItem('kittensList', JSON.stringify(kittenDataList));
+          //Visualiza nuevamente el listado de gatitos
+          renderKittenList(kittenDataList);
+          //Limpia los valores de cada input
+          resetNewKitten();
+          labelMesageError.innerHTML = 'Mola! Un nuevo gatito en Adalab!';
+        } else {
+          //muestra un mensaje de error.
+          console.log('error');
+        }
+      });
+  }
+}
+
+//2.11 Agregar un nuevo gatito al listado
 
 //Cancelar la búsqueda de un gatito
 function cancelNewKitten(event) {
@@ -153,20 +199,34 @@ function filterKitten(event) {
 //Mostrar el listado de gatitos en ell HTML
 /* renderKittenList(kittenDataList); */
 
-
 const GITHUB_USER = 'CeciPeriquet';
 const SERVER_URL = `https://dev.adalab.es/api/kittens/${GITHUB_USER}`;
 
 let kittenDataList = [];
+const kittenListStored = JSON.parse(localStorage.getItem('kittensList'));
 
-fetch(SERVER_URL, {
+if (kittenListStored !== null) {
+  //si existe el listado de gatitos en el local storage
+  // vuelve a pintar el listado de gatitos
+  kittenDataList = kittenListStored;
+  renderKittenList(kittenDataList);
+} else {
+  //sino existe el listado de gatitos en el local storage
+  //haz la petición al servidor
+  fetch(SERVER_URL, {
     method: 'GET',
-    headers: {'Content-Type': 'application/json'},
-  }).then((response) => response.json())
-    .then ((data) => {
-    kittenDataList = data.results;
-    renderKittenList(kittenDataList);
-  } );
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      kittenDataList = data.results;
+      localStorage.setItem('kittensList', JSON.stringify(kittenDataList));
+      renderKittenList(kittenDataList);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
 
 //Eventos
 linkNewFormElememt.addEventListener('click', handleClickNewCatForm);
